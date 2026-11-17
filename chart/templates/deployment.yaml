@@ -1,0 +1,5 @@
+{{ include "canary-web.deployment" (dict "root" . "track" "stable" "spec" .Values.stable) }}
+{{- if .Values.canary.enabled }}
+---
+{{ include "canary-web.deployment" (dict "root" . "track" "canary" "spec" .Values.canary) }}
+{{- end }}
