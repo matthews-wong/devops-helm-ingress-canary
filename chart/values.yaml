@@ -1,0 +1,38 @@
+stable:
+  replicaCount: 2
+  image:
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.27.3-alpine
+    pullPolicy: IfNotPresent
+
+canary:
+  enabled: false
+  # Percent of requests routed to the canary by ingress-nginx.
+  weight: 10
+  replicaCount: 1
+  image:
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.27.4-alpine
+    pullPolicy: IfNotPresent
+
+service:
+  port: 80
+
+containerPort: 8080
+
+ingress:
+  className: nginx
+  host: web.example.test
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+probes:
+  path: /
+  initialDelaySeconds: 2
+  periodSeconds: 10
