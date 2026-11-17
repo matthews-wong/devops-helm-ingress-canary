@@ -21,4 +21,15 @@ disabling the canary.
 
 ## Validate
 
-See the validation section below once the checks land.
+Needs `helm` and `kubeconform` on the PATH.
+
+```bash
+make validate
+```
+
+This runs `helm lint` for the defaults and each `values-<env>.yaml`, renders
+every environment with the canary off and on through `kubeconform -strict`,
+and runs `tests/render_assertions.sh`. The assertions check that canary
+resources appear only when enabled, that the weight follows values, and that
+each Service selects exactly one track. Nothing is applied to a cluster, so
+ingress-nginx behaviour itself is not exercised.
