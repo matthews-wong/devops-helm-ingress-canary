@@ -1,0 +1,9 @@
+stable:
+  replicaCount: 3
+
+canary:
+  enabled: false
+  weight: 5
+
+ingress:
+  host: web.example.test
