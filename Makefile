@@ -1,0 +1,19 @@
+CHART := chart
+ENVS := dev prod
+
+.PHONY: validate lint render render-tests
+
+validate: lint render render-tests
+
+lint:
+	helm lint $(CHART)
+	@for e in $(ENVS); do helm lint $(CHART) -f $(CHART)/values-$$e.yaml || exit 1; done
+
+render:
+	@for e in $(ENVS); do \
+		helm template t $(CHART) -f $(CHART)/values-$$e.yaml | kubeconform -strict -summary || exit 1; \
+		helm template t $(CHART) -f $(CHART)/values-$$e.yaml --set canary.enabled=true | kubeconform -strict -summary || exit 1; \
+	done
+
+render-tests:
+	tests/render_assertions.sh
